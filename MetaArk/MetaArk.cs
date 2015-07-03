@@ -6,9 +6,15 @@ using System.Threading.Tasks;
 
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.IO;
 
 namespace MetaArk
 {
+    public class Config
+    {
+        public string connectionString { get; set; }
+    }
+
     public class MetaArk
     {
         public delegate float StructureDamageHandler(object sender, float damage);
@@ -20,13 +26,18 @@ namespace MetaArk
         private Random rnd;
 
         private MongoDB.Driver.MongoClient mClient;
+
+        public Config mConfig;
         
         public MetaArk()
         {
             instance = this;
             rnd = new Random();
 
-            mClient = new MongoDB.Driver.MongoClient("mongodb://localhost:27017");
+            var input = new StreamReader("MetaArk.yaml");
+            var yaml = new YamlDotNet.Serialization.Deserializer();
+            mConfig = yaml.Deserialize<Config>(input);
+            mClient = new MongoDB.Driver.MongoClient(mConfig.connectionString);
 
             OnStructureDamageEvent += delegate (object sender, float damage)
             {

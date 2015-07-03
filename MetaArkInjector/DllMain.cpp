@@ -12,7 +12,6 @@ extern "C" FARPROC versionFunctions[17] = { 0 };
 
 void threadMain();
 
-#pragma unmanaged
 bool APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved)
 {
 	switch (reason)
