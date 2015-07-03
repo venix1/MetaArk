@@ -1,6 +1,6 @@
 #include "Stdafx.h"
 
-#define PROG_NAME "shootergameserver.exe"
+#define PROG_NAME "ShooterGameServer.exe"
 
 std::string pName;
 
@@ -12,6 +12,7 @@ extern "C" FARPROC versionFunctions[17] = { 0 };
 
 void threadMain();
 
+#pragma unmanaged
 bool APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved)
 {
 	switch (reason)
@@ -20,12 +21,10 @@ bool APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved)
 	{
 		DWORD pID = GetCurrentProcessId();
 		TCHAR buffer[MAX_PATH] = { 0 };
-		TCHAR* out;
 		DWORD bufSize = sizeof(buffer) / sizeof(*buffer);
 		GetModuleFileName(NULL, buffer, bufSize);
-		out = PathFindFileName(buffer);
-		std::string pName = out;
-		std::transform(pName.begin(), pName.end(), pName.begin(), tolower);
+		pName = PathFindFileName(buffer);
+
 		if (pName == PROG_NAME)
 		{
 			hmMain = hModule;
