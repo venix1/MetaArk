@@ -34,10 +34,19 @@ namespace MetaArk
             instance = this;
             rnd = new Random();
 
-            var input = new StreamReader("MetaArk.yaml");
-            var yaml = new YamlDotNet.Serialization.Deserializer();
-            mConfig = yaml.Deserialize<Config>(input);
-            mClient = new MongoDB.Driver.MongoClient(mConfig.connectionString);
+            try
+            {
+                var input = new StreamReader("MetaArk.yaml");
+                var yaml = new YamlDotNet.Serialization.Deserializer();
+                mConfig = yaml.Deserialize<Config>(input);
+                mClient = new MongoDB.Driver.MongoClient(mConfig.connectionString);
+                Console.WriteLine("MetaArk configuration loaded.");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Configuration failed.  MetaArk Aborting\n{0}", e.ToString());
+                return; // Hooks perform default action
+            }
 
             OnStructureDamageEvent += delegate (object sender, float damage)
             {
